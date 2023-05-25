@@ -1,25 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const password = "1634";
 
 function App() {
+  const [error, setError] = useState("");
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [pressedNumbers, setPressedNumbers] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (pressedNumbers.length === 1) {
+      setError("");
+    } else if (pressedNumbers.length === password.length) {
+      if (pressedNumbers.join("") === password) {
+        console.log("correct password");
+        setIsCorrect(true);
+        setError("");
+      } else {
+        setError("wrong password");
+      }
+      setPressedNumbers([]);
+    }
+  }, [pressedNumbers]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/* {JSON.stringify(pressedNumbers)} */}
+
+      {isCorrect ? (
+        <div>Success!</div>
+      ) : (
+        <div>
+          {error}
+          <div className="number-pad">
+            {numbers.map((number, idx) => (
+              <button
+                className={number === 0 ? "zero" : ""}
+                key={idx}
+                onClick={() => {
+                  setPressedNumbers((cur) => [...cur, number]);
+                }}
+              >
+                {number}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
